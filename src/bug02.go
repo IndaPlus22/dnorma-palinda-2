@@ -20,7 +20,7 @@ func main() {
 
 // Print prints all numbers sent on the channel.
 // The function returns when the channel is closed.
-func Print(ch <-chan int, wg * sync.WaitGroup) {
+func Print(ch <-chan int, wg *sync.WaitGroup) {
 	defer wg.Done()
 	for n := range ch { // reads from channel until it's closed
 		time.Sleep(10 * time.Millisecond) // simulate processing time
