@@ -1,5 +1,3 @@
-// Stefan Nilsson 2013-03-13
-
 // This program implements an ELIZA-like oracle (en.wikipedia.org/wiki/ELIZA).
 package main
 
@@ -42,19 +40,41 @@ func main() {
 // The oracle also prints sporadic prophecies to stdout even without being asked.
 func Oracle() chan<- string {
 	questions := make(chan string)
-	// TODO: Answer questions.
-	// TODO: Make prophecies.
-	// TODO: Print answers.
+	answers := make(chan string)
+	go func(){
+		for str := range questions {
+			go prophecy(str, answers)
+		}
+	}()
+	go func(){
+		for{
+			time.Sleep(time.Duration(20+rand.Intn(10)) * time.Second)
+			prophecy("Prediction:", answers)
+		}
+	}()
+	go func() {
+		for ans:= range answers{
+			for _, ch := range ans{
+				fmt.Print(string(ch))
+				time.Sleep(50*time.Millisecond)
+			}
+			fmt.Print("\n> ")
+		}
+	}()
 	return questions
 }
 
 // This is the oracle's secret algorithm.
 // It waits for a while and then sends a message on the answer channel.
-// TODO: make it better.
 func prophecy(question string, answer chan<- string) {
 	// Keep them waiting. Pythia, the original oracle at Delphi,
 	// only gave prophecies on the seventh day of each month.
 	time.Sleep(time.Duration(2+rand.Intn(3)) * time.Second)
+
+	if question == "What is the meaning of life?"{
+		answer <- "Ah, life! ..."
+		return
+	}
 
 	// Find the longest word.
 	longestWord := ""
@@ -69,6 +89,10 @@ func prophecy(question string, answer chan<- string) {
 	nonsense := []string{
 		"The moon is dark.",
 		"The sun is bright.",
+		"Gravity is an invention",
+		"Gravy is a good invention",
+		"Get a real job like landlord or company heir",
+		"Broken glass tastes like blood",
 	}
 	answer <- longestWord + "... " + nonsense[rand.Intn(len(nonsense))]
 }
