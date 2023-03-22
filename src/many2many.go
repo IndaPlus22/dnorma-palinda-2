@@ -21,7 +21,7 @@ func main() {
 
 	before := time.Now()
 	ch := make(chan string)
-	
+
 	wgp := new(sync.WaitGroup)
 	wgp.Add(producers)
 	wgc := new(sync.WaitGroup)

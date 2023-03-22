@@ -4,7 +4,7 @@ import "fmt"
 
 func main() {
 	ch := make(chan string)
-	go func(){
+	go func() {
 		ch <- "Hello world!"
 	}()
 	fmt.Println(<-ch)

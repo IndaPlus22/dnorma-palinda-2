@@ -41,22 +41,22 @@ func main() {
 func Oracle() chan<- string {
 	questions := make(chan string)
 	answers := make(chan string)
-	go func(){
+	go func() {
 		for str := range questions {
 			go prophecy(str, answers)
 		}
 	}()
-	go func(){
-		for{
+	go func() {
+		for {
 			time.Sleep(time.Duration(20+rand.Intn(10)) * time.Second)
 			prophecy("Prediction:", answers)
 		}
 	}()
 	go func() {
-		for ans:= range answers{
-			for _, ch := range ans{
+		for ans := range answers {
+			for _, ch := range ans {
 				fmt.Print(string(ch))
-				time.Sleep(50*time.Millisecond)
+				time.Sleep(50 * time.Millisecond)
 			}
 			fmt.Print("\n> ")
 		}
@@ -71,7 +71,7 @@ func prophecy(question string, answer chan<- string) {
 	// only gave prophecies on the seventh day of each month.
 	time.Sleep(time.Duration(2+rand.Intn(3)) * time.Second)
 
-	if question == "What is the meaning of life?"{
+	if question == "What is the meaning of life?" {
 		answer <- "Ah, life! ..."
 		return
 	}
